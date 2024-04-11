@@ -1,0 +1,37 @@
+@import "variables";
+@import "functions";
+
+
+.NavBar {
+    // position: fixed;
+    background-color: $azulEscuro;
+    width: 100%;
+    .content {
+        @include tamanhoTelaPadrao();
+        @include centralizarConteudo();
+        display: flex;
+        height: 100px;
+        align-items: center;
+        justify-content: space-between;
+        img {
+            max-width: 120px;
+            &:hover {
+                filter: brightness(0.95);
+            }
+        }
+        .links {
+            display: flex;
+            gap: 38px;
+            a {
+                text-decoration: none;
+                color: white;
+                &:hover {
+                    text-decoration: underline;
+                    text-decoration-color: $azulSecundario;
+                    text-decoration-skip-ink: none;
+                    text-decoration-thickness: 3px;
+                }
+            }
+        }
+    }
+}
