@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/Home.scss";
+import HomeTable from "../components/HomeTable";
 
 export default function Home() {
   return (
@@ -52,11 +53,7 @@ export default function Home() {
         </div>
       </div>
       <div className="bottomContent">
-        <h1>TESTE</h1>
-        <h1>TESTE</h1>
-        <h1>TESTE</h1>
-        <h1>TESTE</h1>
-        <h1>TESTE</h1>
+        <HomeTable />
       </div>
     </div>
   );
