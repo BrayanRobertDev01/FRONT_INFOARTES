@@ -2,7 +2,7 @@
 @import "functions";
 
 .HomeBody {
-    height: 89.5vh;
+    height: fit-content;
     background-color: $azulClaro;
     .HomeContainer {
         display: flex;
@@ -102,9 +102,11 @@
         }
     }
     .bottomContent {
+        justify-content: center;
+        display: grid;
         width: 100%;
         padding-top: 30px;
         background-color: $azulEscuro;
-        height: 57.8%;
+        height: fit-content;
     }
 }
