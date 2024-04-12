@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Days+One&display=swap');
 @import "variables";
 @import "functions";
 
@@ -16,38 +17,91 @@
   border-radius: 6px; /* Borda arredondada */
 }
 
+.ContainerButtonsTable {
+  // background-color: red;
+  height: 34.2vh;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  .buttonsPrevNext {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    button {
+      display: flex;
+      border: 1px solid white;
+      padding: 9px;
+      border-radius: 100%;
+      background-color: $azulSecundario;
+      &:hover {
+        cursor: pointer;
+        transition: 0.2s;
+        background-color: $azulSecundarioHover;
+      }
+      svg {
+        color: white;
+        width: 25px;
+        height: 100%;
+      }
+    }
+  }
+}
+
 .HomeTableContainer {
-    width: 1600px;
-    max-width: 1400px;
-    max-height: 235px;
-    overflow: auto; 
-    
-    @include centralizarConteudo();
-    ul {
-        // padding: 5px;
+  width: 1600px;
+  max-width: 1400px;
+  max-height: 100%;
+  overflow: auto;
+
+  @include centralizarConteudo();
+  ul {
+    // padding: 5px;
+    background-color: rgb(161, 158, 158);
+    display: grid;
+    grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 0.5fr;
+    li {
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+      border-top: 2px solid rgb(161, 158, 158);
+      &:first-child {
+        border-left: none;
+      }
+      select {
+        display: flex;
+        margin: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
         background-color: rgb(161, 158, 158);
-        display: grid;
-        grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 0.5fr;
-        li{
-            padding: 10px;
-            text-align: center;
-            border-top: 2px solid rgb(161, 158, 158);
-            &:first-child{
-                border-left: none;
-            }
-        }
-    }
-    .HeaderInformations{  
-      position: sticky;
-      top: 0;
-    }
-    .SalesInformationHome{
-      background-color: rgb(207, 203, 203);
-      ul{
-        &:first-child{
-          padding-top: 100px;
-          color: red;
+        outline: none;
+        border: none;
+        font-size: 15px;
+        font-family: "Days One";
+        @include centralizarConteudo();
+        text-align: center;
+        cursor: pointer;
+        option{
+          font-size: 18px;
+          // padding: 50px;
+          border: 10px solid gray;
+          background-color: gray;
         }
       }
     }
+  }
+  .HeaderInformations {
+    position: sticky;
+    top: 0;
+  }
+  .SalesInformationHome {
+    background-color: rgb(207, 203, 203);
+    ul {
+      &:first-child {
+        padding-top: 100px;
+        color: red;
+      }
+    }
+  }
 }

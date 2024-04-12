@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import "../styles/HomeTable.scss";
+import {
+  GrFormDown,
+  GrFormNext,
+  GrFormPrevious,
+  GrFormUp,
+} from "react-icons/gr";
 
 export default function HomeTable() {
   const [page, setPage] = useState(0);
@@ -148,30 +154,74 @@ export default function HomeTable() {
       data: "25/06/2024",
       status: "Pendente",
     },
+    {
+      title: "Venda22",
+      cliente: "Brayan",
+      mes: "Maio",
+      data: "25/06/2024",
+      status: "Pendente",
+    },
   ];
 
   return (
-    <div className="HomeTableContainer">
-      {/* <button onClick={() => setPage(page + 1)}>Próxima página</button>
-      {page > 0 ? (
-        <button onClick={() => setPage(page - 1)}>Página Anterior</button>
-      ) : null} */}
-      <ul className="HeaderInformations">
-        <li>Últimas Vendas</li>
-        <li>Cliente</li>
-        <li>Mês</li>
-        <li>Data</li>
-        <li>Status</li>
-      </ul>
-      {ficInformations.slice(startIndex, endIndex).map((a, index) => (
-        <ul className="SalesInformationHome">
-          <li>{a.title}</li>
-          <li>{a.cliente}</li>
-          <li>{a.mes}</li>
-          <li>{a.data}</li>
-          <li>{a.status}</li>
+    <div className="ContainerButtonsTable">
+      <div className="buttonsPrevNext">
+        {page > 0 ? (
+          <button onClick={() => setPage(page - 1)}>
+            <GrFormUp />
+          </button>
+        ) : null}
+        {endIndex < ficInformations.length ? (
+          <button onClick={() => setPage(page + 1)}>
+            <GrFormDown />
+          </button>
+        ) : null}
+      </div>
+      {console.log(ficInformations)}
+      <div className="HomeTableContainer">
+        <ul className="HeaderInformations">
+          <li>Últimas Vendas</li>
+          <li>Cliente</li>
+          <li>Data</li>
+          <li className="list">
+            <select name="mes" id="cars">
+              <option value="*">Mês</option>
+              {[...new Set(ficInformations.map((obj) => obj.mes))]?.map((i) => (
+                <option value={i}>{i}</option>
+              ))}
+              {/* <option value="janeiro">Janeiro</option>
+              <option value="fevereiro">Fevereiro</option>
+              <option value="marco">Março</option>
+              <option value="abril">Abril</option>
+              <option value="maio">Maio</option>
+              <option value="junho">Junho</option>
+              <option value="julho">Julho</option>
+              <option value="agosto">Agosto</option>
+              <option value="setembro">Setembro</option>
+              <option value="outubro">Outubro</option>
+              <option value="novembro">Novembro</option>
+              <option value="dezembro">Dezembro</option> */}
+            </select>
+          </li>
+          <li className="list">
+            <select name="status" id="cars">
+              <option value="volvo">Status</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select>
+          </li>
         </ul>
-      ))}
+        {ficInformations.slice(startIndex, endIndex).map((a, index) => (
+          <ul className="SalesInformationHome">
+            <li>{a.title}</li>
+            <li>{a.cliente}</li>
+            <li>{a.data}</li>
+            <li>{a.mes}</li>
+            <li>{a.status}</li>
+          </ul>
+        ))}
+      </div>
     </div>
   );
 }
