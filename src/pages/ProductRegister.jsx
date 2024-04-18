@@ -44,14 +44,29 @@ export default function ProductRegister() {
     },
   ];
 
+
   const [active, setActive] = useState();
+  const [FrenteDetails, setFrenteDetails] = useState(false)
+  const [SomenteFrenteDetails, setSomenteFrenteDetails] = useState(false)
 
   const handleShowItem = (index) => {
     if (active !== index) {
       setActive(index);
+      setFrenteDetails(false);
+      setSomenteFrenteDetails(false);
     } else {
       setActive(null);
     }
+  };
+
+  const toggleDetailsSomenteFrente = () => {
+    setSomenteFrenteDetails(!SomenteFrenteDetails);
+    setFrenteDetails(false);
+  };
+
+  const toggleDetailsFrente = () => {
+    setFrenteDetails(!FrenteDetails);
+    setSomenteFrenteDetails(false); 
   };
 
   const formatoMoedaBrasileira = (value) => {
@@ -79,21 +94,46 @@ export default function ProductRegister() {
           ))}
         </ul>
       </div>
-      <div className="ContainerForm">
-        {active != null && (
-          <form className="form">
-            {items[active]?.properties?.map((a) => (
-              <div className="questions">
-                <Card
-                  properties={a.fieldName}
-                  quantity={a.fieldPackage}
-                  value={a.fieldValue}
-                />
-              </div>
-            ))}
-          </form>
+      <div className="SubProductFolheto">
+        {(active != null && items[active].title === "Folheto") && (
+          <div className="Teste">
+          <h1 onClick={toggleDetailsFrente}>FRENTE E VERSO</h1>
+          {FrenteDetails && (
+            <form className="form">
+            {items[active]?.properties
+              ?.filter(a => a.fieldName.startsWith("Frente e Verso"))
+              .map((a, index) => (
+                <div className="questions" key={index}>
+                  <Card
+                    properties={a.fieldName}
+                    quantity={a.fieldPackage}
+                    value={a.fieldValue}
+                  />
+                </div>
+              ))}
+          </form>          
+          )}
+          <h1 onClick={toggleDetailsSomenteFrente}>SOMENTE FRENTE</h1>
+          {SomenteFrenteDetails && (
+            <form className="form">
+            {items[active]?.properties
+              ?.filter(a => a.fieldName.startsWith("Somente Frente"))
+              .map((a, index) => (
+                <div className="questions" key={index}>
+                  <Card
+                    properties={a.fieldName}
+                    quantity={a.fieldPackage}
+                    value={a.fieldValue}
+                  />
+                </div>
+              ))}
+          </form>      
+          )}
+        </div>
+
         )}
       </div>
     </div>
   );
 }
+
