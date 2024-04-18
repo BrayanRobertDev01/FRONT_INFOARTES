@@ -33,16 +33,64 @@ export default function ProductRegister() {
       title: "Camisa",
       properties: [
         {
-          fieldName: "Tamanho G",
+          fieldName: "Tamanho P",
           fieldtec: "Algodão",
           fieldColor: "Preto",
-          fieldValue: 20,
+          fieldValue: 40,
         },
         {
           fieldName: "Tamanho M",
           fieldtec: "Algodão",
           fieldColor: "Preto",
-          fieldValue: 17,
+          fieldValue: 40,
+        },
+        {
+          fieldName: "Tamanho G",
+          fieldtec: "Algodão",
+          fieldColor: "Preto",
+          fieldValue: 40,
+        },
+        {
+          fieldName: "Tamanho GG",
+          fieldtec: "Algodão",
+          fieldColor: "Preto",
+          fieldValue: 40,
+        },
+        {
+          fieldName: "Tamanho XGG",
+          fieldtec: "Algodão",
+          fieldColor: "Preto",
+          fieldValue: 43,
+        },
+        {
+          fieldName: "Tamanho P",
+          fieldtec: "Algodão",
+          fieldColor: "Branco",
+          fieldValue: 30,
+        },
+        {
+          fieldName: "Tamanho M",
+          fieldtec: "Algodão",
+          fieldColor: "Branco",
+          fieldValue: 30,
+        },
+        {
+          fieldName: "Tamanho G",
+          fieldtec: "Algodão",
+          fieldColor: "Branco",
+          fieldValue: 30,
+        },
+        {
+          fieldName: "Tamanho GG",
+          fieldtec: "Algodão",
+          fieldColor: "Branco",
+          fieldValue: 30,
+        },
+        {
+          fieldName: "Tamanho XGG",
+          fieldtec: "Algodão",
+          fieldColor: "Branco",
+          fieldValue: 33,
         },
       ],
     },
@@ -142,6 +190,41 @@ export default function ProductRegister() {
           )}
         </div>
 
+        )}
+        {(active != null && items[active].title === "Camisa") && (
+          <div className="Teste">
+          <h1 onClick={toggleDetailsFrente}>CAMISAS DE ALGODÃO</h1>
+          {FrenteDetails && (
+            <form className="form">
+            {items[active]?.properties
+              ?.filter(a => a.fieldtec === "Algodão")
+              .map((a, index) => (
+                <div className="questions" key={index}>
+                  <Card
+                    properties={a.fieldName}
+                    cor={a.fieldColor}
+                    value={a.fieldValue}
+                  />
+                </div>
+              ))}
+          </form>          
+          )}
+          <h1 onClick={toggleDetailsSomenteFrente}>CAMISAS DE POLIÉSTER</h1>
+          {SomenteFrenteDetails && (
+            <form className="form">
+            {items[active]?.properties
+              ?.filter(a => a.fieldName.startsWith("Poliéster"))
+              .map((a, index) => (
+                <div className="questions" key={index}>
+                  <Card
+                    properties={a.fieldName}
+                    value={a.fieldValue}
+                  />
+                </div>
+              ))}
+          </form>      
+          )}
+        </div>
         )}
       </div>
     </div>
