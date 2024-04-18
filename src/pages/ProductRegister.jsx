@@ -34,10 +34,14 @@ export default function ProductRegister() {
       properties: [
         {
           fieldName: "Tamanho G",
+          fieldtec: "Algodão",
+          fieldColor: "Preto",
           fieldValue: 20,
         },
         {
           fieldName: "Tamanho M",
+          fieldtec: "Algodão",
+          fieldColor: "Preto",
           fieldValue: 17,
         },
       ],
@@ -84,10 +88,17 @@ export default function ProductRegister() {
             <>
               <li onClick={() => handleShowItem(index)}>{i.title}</li>
               <div className={`item ${active === index ? "active" : ""}`}>
-                {i?.properties?.map((j) => (
+              {i.title === "Folheto" && i.properties && i.properties.map((j) => (
                   <h1>
                     {j.fieldName} - {formatoMoedaBrasileira(j.fieldValue)}
                   </h1>
+              
+                ))}
+              {i.title === "Camisa" && i.properties && i.properties.map((j) => (
+                  <h1>
+                    {j.fieldtec}, {j.fieldName}, {j.fieldColor} - {formatoMoedaBrasileira(j.fieldValue)}
+                  </h1>
+              
                 ))}
               </div>
             </>
