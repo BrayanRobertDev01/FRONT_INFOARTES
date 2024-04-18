@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import "../styles/HomeTable.scss";
 import {
   GrFormDown,
-  GrFormNext,
-  GrFormPrevious,
   GrFormUp,
 } from "react-icons/gr";
 

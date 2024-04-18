@@ -4,6 +4,6 @@
 body{
     background-color: $azulEscuro;
     .NavBarGap{
-        max-height: 86vh;
+        max-height: $alturaConteudo;
     }
 }
