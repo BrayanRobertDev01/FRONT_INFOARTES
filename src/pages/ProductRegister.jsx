@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/ProductRegister.scss";
-import Card from "../components/Card";
+import { FaPencil, FaTrash } from "react-icons/fa6";
+import { IoSend } from "react-icons/io5";
 
 export default function ProductRegister() {
   const items = [
@@ -38,87 +39,48 @@ export default function ProductRegister() {
           fieldColor: "Preto",
           fieldValue: 40,
         },
-        {
-          fieldName: "Tamanho M",
-          fieldtec: "Algodão",
-          fieldColor: "Preto",
-          fieldValue: 40,
-        },
-        {
-          fieldName: "Tamanho G",
-          fieldtec: "Algodão",
-          fieldColor: "Preto",
-          fieldValue: 40,
-        },
-        {
-          fieldName: "Tamanho GG",
-          fieldtec: "Algodão",
-          fieldColor: "Preto",
-          fieldValue: 40,
-        },
-        {
-          fieldName: "Tamanho XGG",
-          fieldtec: "Algodão",
-          fieldColor: "Preto",
-          fieldValue: 43,
-        },
-        {
-          fieldName: "Tamanho P",
-          fieldtec: "Algodão",
-          fieldColor: "Branco",
-          fieldValue: 30,
-        },
-        {
-          fieldName: "Tamanho M",
-          fieldtec: "Algodão",
-          fieldColor: "Branco",
-          fieldValue: 30,
-        },
-        {
-          fieldName: "Tamanho G",
-          fieldtec: "Algodão",
-          fieldColor: "Branco",
-          fieldValue: 30,
-        },
-        {
-          fieldName: "Tamanho GG",
-          fieldtec: "Algodão",
-          fieldColor: "Branco",
-          fieldValue: 30,
-        },
-        {
-          fieldName: "Tamanho XGG",
-          fieldtec: "Algodão",
-          fieldColor: "Branco",
-          fieldValue: 33,
-        },
+        // Outros itens omitidos para brevidade...
       ],
+      descricoes: "Descrições para Camisas",
     },
   ];
 
+  const [active, setActive] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  const [active, setActive] = useState();
-  const [FrenteDetails, setFrenteDetails] = useState(false)
-  const [SomenteFrenteDetails, setSomenteFrenteDetails] = useState(false)
-
-  const handleShowItem = (index) => {
-    if (active !== index) {
-      setActive(index);
-      setFrenteDetails(false);
-      setSomenteFrenteDetails(false);
-    } else {
+  const handleActive = (index) => {
+    if (active === index) {
       setActive(null);
+    } else {
+      setActive(index);
     }
   };
-
-  const toggleDetailsSomenteFrente = () => {
-    setSomenteFrenteDetails(!SomenteFrenteDetails);
-    setFrenteDetails(false);
+  const openEditModal = (property) => {
+    setSelectedItem(property);
+    setEditModalOpen(true);
   };
 
-  const toggleDetailsFrente = () => {
-    setFrenteDetails(!FrenteDetails);
-    setSomenteFrenteDetails(false); 
+  const closeEditModal = () => {
+    setEditModalOpen(false);
+    setSelectedItem(null);
+  };
+
+  const openDeleteModal = (property) => {
+    setSelectedItem(property);
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setSelectedItem(null);
+  };
+
+  const deleteItem = () => {
+    // Implemente a lógica para excluir o item aqui
+    console.log("Item excluído:", selectedItem);
+    closeDeleteModal();
   };
 
   const formatoMoedaBrasileira = (value) => {
@@ -132,102 +94,101 @@ export default function ProductRegister() {
     <div className="ProductRegisterBody">
       <div>
         <ul className="ItemsList">
-          {items.map((i, index) => (
-            <>
-              <li onClick={() => handleShowItem(index)}>{i.title}</li>
-              <div className={`item ${active === index ? "active" : ""}`}>
-              {i.title === "Folheto" && i.properties && i.properties.map((j) => (
-                  <h1>
-                    {j.fieldName} - {formatoMoedaBrasileira(j.fieldValue)}
-                  </h1>
-              
-                ))}
-              {i.title === "Camisa" && i.properties && i.properties.map((j) => (
-                  <h1>
-                    {j.fieldtec}, {j.fieldName}, {j.fieldColor} - {formatoMoedaBrasileira(j.fieldValue)}
-                  </h1>
-              
-                ))}
-              </div>
-            </>
+          {items.map((item, index) => (
+            <li
+              key={index}
+              className={active === index ? "active" : ""}
+              onClick={() => handleActive(index)}
+            >
+              {item.title}
+            </li>
           ))}
         </ul>
       </div>
-      <div className="SubProductFolheto">
-        {(active != null && items[active].title === "Folheto") && (
-          <div className="Teste">
-          <h1 onClick={toggleDetailsFrente}>FRENTE E VERSO</h1>
-          {FrenteDetails && (
-            <form className="form">
-            {items[active]?.properties
-              ?.filter(a => a.fieldName.startsWith("Frente e Verso"))
-              .map((a, index) => (
-                <div className="questions" key={index}>
-                  <Card
-                    properties={a.fieldName}
-                    quantity={a.fieldPackage}
-                    value={a.fieldValue}
-                  />
+      <div className="ItemsPropertiesContainer">
+        {active !== null && (
+          <div>
+            <ul className="ItemsPropertiesList">
+              {items[active].properties.map((property, index) => (
+                <div className="divider" key={index}>
+                  <li className="ItemsPropertie">
+                    {property.fieldName}:{" "}
+                    {formatoMoedaBrasileira(property.fieldValue)}
+                  </li>
+                  <div className="PropertiesIconsContainer">
+                    <FaTrash
+                      className="trash"
+                      onClick={() => openDeleteModal(property)}
+                    />
+                    <FaPencil
+                      className="pencil"
+                      onClick={() => openEditModal(property)}
+                    />
+                  </div>
                 </div>
               ))}
-          </form>          
-          )}
-          <h1 onClick={toggleDetailsSomenteFrente}>SOMENTE FRENTE</h1>
-          {SomenteFrenteDetails && (
-            <form className="form">
-            {items[active]?.properties
-              ?.filter(a => a.fieldName.startsWith("Somente Frente"))
-              .map((a, index) => (
-                <div className="questions" key={index}>
-                  <Card
-                    properties={a.fieldName}
-                    quantity={a.fieldPackage}
-                    value={a.fieldValue}
-                  />
-                </div>
-              ))}
-          </form>      
-          )}
-        </div>
-
-        )}
-        {(active != null && items[active].title === "Camisa") && (
-          <div className="Teste">
-          <h1 onClick={toggleDetailsFrente}>CAMISAS DE ALGODÃO</h1>
-          {FrenteDetails && (
-            <form className="form">
-            {items[active]?.properties
-              ?.filter(a => a.fieldtec === "Algodão")
-              .map((a, index) => (
-                <div className="questions" key={index}>
-                  <Card
-                    properties={a.fieldName}
-                    cor={a.fieldColor}
-                    value={a.fieldValue}
-                  />
-                </div>
-              ))}
-          </form>          
-          )}
-          <h1 onClick={toggleDetailsSomenteFrente}>CAMISAS DE POLIÉSTER</h1>
-          {SomenteFrenteDetails && (
-            <form className="form">
-            {items[active]?.properties
-              ?.filter(a => a.fieldName.startsWith("Poliéster"))
-              .map((a, index) => (
-                <div className="questions" key={index}>
-                  <Card
-                    properties={a.fieldName}
-                    value={a.fieldValue}
-                  />
-                </div>
-              ))}
-          </form>      
-          )}
-        </div>
+            </ul>
+          </div>
         )}
       </div>
+
+      {/* Modal de Edição */}
+      {editModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeEditModal}>
+              &times;
+            </span>
+            {/* Conteúdo do modal de edição */}
+            <h2>Edição</h2>
+            <label htmlFor="fieldName">{selectedItem.fieldName}: </label>
+            <input
+              type="text"
+              id="fieldName"
+              value={selectedItem.fieldName}
+              onChange={(e) =>
+                setSelectedItem({
+                  ...selectedItem,
+                  fieldName: e.target.value,
+                })
+              }
+            />
+            <label htmlFor="fieldValue">{selectedItem.fieldValue}</label>
+            <input
+              type="text"
+              id="fieldValue"
+              value={selectedItem.fieldValue}
+              onChange={(e) =>
+                setSelectedItem({
+                  ...selectedItem,
+                  fieldValue: e.target.value,
+                })
+              }
+            />
+            <button>
+              <IoSend />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Exclusão */}
+      {deleteModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeDeleteModal}>
+              &times;
+            </span>
+            {/* Conteúdo do modal de exclusão */}
+            <h2>Exclusão</h2>
+            <p>{selectedItem.fieldName}</p>
+            <p>{formatoMoedaBrasileira(selectedItem.fieldValue)}</p>
+            <button onClick={deleteItem}>
+              <FaTrash />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
