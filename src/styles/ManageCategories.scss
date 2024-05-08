@@ -1,0 +1,172 @@
+@import "variables";
+@import "functions";
+
+.categories-create-form {
+    background-color: #032339;
+}
+
+.categories-create-container {
+    border-top: 1px solid $azulSecundario;
+    background-color: #032339;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    height: 70px;
+    label {
+        color: white;
+        margin-right: 10px;
+    }
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $azulSecundario;
+        outline: none;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        color: black;
+        transition: 0.4s;
+        &:hover {
+            transition: 0.4s;
+            background-color: $azulSecundarioHover;
+            cursor: pointer;
+        }
+        svg {
+            width: 25px;
+            height: 25px;
+            color: white;
+        }
+    }
+    input,
+    select {
+        width: 150px;
+        height: 25px;
+        box-sizing: border-box;
+        transition: 0.3s;
+        outline: none;
+        border: 0px;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+    input {
+        padding: 5px;
+    }
+    select {
+        &:hover {
+            cursor: pointer;
+            background-color: rgb(240, 239, 239);
+            transition: 0.3s;
+        }
+    }
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+        transform: translate3d(-30px, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.categories-list-field {
+    color: white;
+    background-color: #032339;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    height: 70px;
+    animation: show 0.3s ease-in-out;
+    animation-fill-mode: forwards; /* Manterá o estado final após a animação */
+    input {
+        width: 400px;
+        height: 25px;
+        box-sizing: border-box;
+        transition: 0.3s;
+        outline: none;
+        border: 0px;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+    input {
+        padding: 5px;
+    }
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $azulSecundario;
+        outline: none;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        color: black;
+        transition: 0.4s;
+        &:hover {
+            transition: 0.4s;
+            background-color: $azulSecundarioHover;
+            cursor: pointer;
+        }
+        svg {
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
+    }
+}
+
+.table-create {
+    width: 100%;
+}
+
+.table-create th,
+.table-create td {
+    border: 1px solid #a09e9e;
+    padding: 8px;
+    text-align: center;
+}
+
+.table-create th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.table-create tbody {
+    background-color: #e3e2e2;
+}
+
+.table-titles-container th:first-child,
+tbody tr td:first-child {
+    border-left: none;
+}
+
+.table-titles-container th:last-child,
+tbody tr td:last-child {
+    border-right: none;
+}
+
+.save-button-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.save-button {
+    padding: 20px 60px;
+    border: none;
+    font-weight: bold;
+    border-radius: 30px;
+    background-color: $azulSecundario;
+    &:hover {
+        cursor: pointer;
+        transition: 0.4s;
+        background-color: $azulSecundarioHover;
+    }
+}

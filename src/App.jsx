@@ -4,7 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./styles/App.scss";
 import ManageProducts from "./pages/ManageProducts";
 import RegisterProducts from "./pages/RegisterProducts";
-import Toninho from "./pages/Teste";
+import ManageCategories from "./pages/ManageCategories";
 
 function App() {
   return (
@@ -15,8 +15,8 @@ function App() {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/manage_products" element={<ManageProducts />} />
-            <Route path="/register-product" element={<RegisterProducts/>}/>
-            <Route path="/manage-types" element={<Toninho/>}/>
+            <Route path="/register-product" element={<RegisterProducts />} />
+            <Route path="/manage-types" element={<ManageCategories />} />
           </Routes>
         </div>
       </div>
