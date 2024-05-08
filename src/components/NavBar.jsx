@@ -14,8 +14,8 @@ export default function NavBar() {
         </div>
         <div className="links">
           <Link to="/">Tela inicial</Link>
-          <Link to="/">Gerenciar Produtos</Link>
-          <Link to="/">Registrar Venda</Link>
+          <Link to="/manage_products">Gerenciar Produtos</Link>
+          <Link to="/register-sale">Registrar Venda</Link>
           <Link to="/register-product">Registrar Produto</Link>
         </div>
       </div>
