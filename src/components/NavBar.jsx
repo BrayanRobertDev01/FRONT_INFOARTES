@@ -17,6 +17,7 @@ export default function NavBar() {
           <Link to="/manage_products">Gerenciar Produtos</Link>
           <Link to="/register-sale">Registrar Venda</Link>
           <Link to="/register-product">Registrar Produto</Link>
+          <Link to="/manage-types">Gerenciar Categorias</Link>
         </div>
       </div>
     </div>
