@@ -1,118 +1,149 @@
-
-import React, { useState } from 'react';
-
-const tipo_produtos = [
-  {
-    id: 1,
-    caracteristicas: {
-      cor: ['Branca', 'Preta', 'Colorida'],
-      nome: 'Camisa',
-      preco: 'Float',
-      tecido: ['Poliéster', 'Algodão', 'Dryfit', 'Polo'],
-      tamanho: ['P', 'M', 'G', 'GG', 'xGG'],
-    },
-  },
-  {
-    id: 2,
-    caracteristicas: {
-      nome: 'Folheto',
-      preco: 'Float',
-      altura: 'Int',
-      largura: 'Int',
-      quantidade: [100, 200, 300, 400, 500, 1000, 1500, 2000, 2500, 5000],
-      especificacao: ['Somente Frente', 'Frente e Verso'],
-    },
-  },
-  {
-    id: 3,
-    caracteristicas: {
-      nome: 'Lona',
-      tipo: 'String',
-      preco: 'Float',
-      altura: 1,
-      largura: 1,
-    },
-  },
-  {
-    id: 4,
-    caracteristicas: {
-      nome: 'Adeviso',
-      preco: 'Float',
-      altura: 1,
-      largura: 1,
-      recortado: 'Boolean',
-    },
-  },
-];
+import React, { useEffect, useState } from 'react';
 
 export default function RegisterProducts() {
+  const [tipo_produtos, setTipoProdutos] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [productName, setProductName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:3000/tipo-produto');
+        if (response.ok) {
+          const data = await response.json();
+          setTipoProdutos(data);
+          setLoading(false);
+        } else {
+          console.error('Erro na resposta:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handleItemClick = (id) => {
-    setSelectedProductId(id); 
+    setSelectedProductId(id);
+    setFormData({});
+    setProductName("");
+    setSubmitStatus(null); // Limpa a mensagem de status ao selecionar um novo produto
+  };
+
+  const handleInputChange = (key, value) => {
+    if (key === "nome") {
+      setProductName(value);
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [key]: value,
+      }));
+    }
   };
 
   const getFormFields = (caracteristicas) => {
-    return Object.entries(caracteristicas).map(([key, value]) => {
-      if (key === 'nome') {
-        return null;
-      }
+    const fields = Object.entries(caracteristicas).map(([key, value]) => {
+      let inputElement;
 
       if (Array.isArray(value)) {
-        return (
-          <div key={key}>
-            <label>{key}:</label>
-            <select>
-              {value.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </div>
+        inputElement = (
+          <select onChange={(e) => handleInputChange(key, e.target.value)}>
+            {value.map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
         );
+      } else {
+        switch (value) {
+          case 'Moeda (R$)':
+            inputElement = (
+              <input
+                type="number"
+                step="0.01"
+                onChange={(e) => handleInputChange(key, e.target.value)}
+              />
+            );
+            break;
+          case 'Medida (m ou cm)':
+            inputElement = (
+              <input
+                type="number"
+                step="0.01"
+                onChange={(e) => handleInputChange(key, e.target.value)}
+              />
+            );
+            break;
+          case 'Int':
+            inputElement = (
+              <input
+                type="number"
+                step="1"
+                onChange={(e) => handleInputChange(key, e.target.value)}
+              />
+            );
+            break;
+          case 'Boolean':
+            inputElement = (
+              <input
+                type="checkbox"
+                onChange={(e) => handleInputChange(key, e.target.checked)}
+              />
+            );
+            break;
+          default:
+            inputElement = (
+              <input
+                type="text"
+                onChange={(e) => handleInputChange(key, e.target.value)}
+              />
+            );
+            break;
+        }
       }
 
-      if (typeof value === 'number') {
-        return (
-          <div key={key}>
-            <label>{key}:</label>
-            <input type="number" step={key === 'Float' ? '0.01' : '1'} defaultValue={value} />
-          </div>
-        );
-      }
-
-      switch (value) {
-        case 'Float':
-          return (
-            <div key={key}>
-              <label>{key}:</label>
-              <input type="number" step="0.01" />
-            </div>
-          );
-        case 'Int':
-          return (
-            <div key={key}>
-              <label>{key}:</label>
-              <input type="number" step="1" />
-            </div>
-          );
-        case 'Boolean':
-          return (
-            <div key={key}>
-              <label>{key}:</label>
-              <input type="checkbox" />
-            </div>
-          );
-        default:
-          return (
-            <div key={key}>
-              <label>{key}:</label>
-              <input type="text" />
-            </div>
-          );
-      }
+      return (
+        <div key={key}>
+          <label>{key}:</label>
+          {inputElement}
+        </div>
+      );
     });
+
+    return fields;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const json = {
+      id_tipo_produto: selectedProductId,
+      nome: productName,
+      informacoes: formData,
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:3000/produto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(json),
+      });
+
+      if (response.ok) {
+        setSubmitStatus("Produto cadastrado com sucesso!");
+      } else {
+        setSubmitStatus(`Erro ao cadastrar produto: ${response.statusText}`);
+      }
+    } catch (error) {
+      setSubmitStatus(`Erro ao cadastrar produto: ${error.message}`);
+    }
   };
 
   const selectedProduct = tipo_produtos.find(
@@ -121,38 +152,55 @@ export default function RegisterProducts() {
 
   return (
     <div>
-      <ul>
-        {tipo_produtos.map((produto) => (
-          <li
-            key={produto.id}
-            style={{ color: 'white' }}
-            onClick={() => handleItemClick(produto.id)} 
-          >
-            {produto.caracteristicas.nome}
-          </li>
-        ))}
-      </ul>
-      {selectedProductId && (
-        <div style={{
-            display: 'grid',
-            placeItems: 'center',
-            height: '100vh'
-        }}>
-            <form style={{
-                color : "white",
-                display : "flex",
-                flexDirection : "column",
-                padding : "10px 10px 10px 10px",
-                width : "500px"
-            }}>{getFormFields(selectedProduct.caracteristicas)}
-            <button
-              type="submit"
-            >
-              Enviar
-            </button>
-            </form>
-        </div>
+      {loading ? (
+        <p>Carregando...</p>
+      ) : (
+        <>
+          <ul>
+            {tipo_produtos.map((produto) => (
+              <li
+                key={produto.id}
+                onClick={() => handleItemClick(produto.id)}
+              >
+                {produto.nome}
+              </li>
+            ))}
+          </ul>
+          {selectedProductId && selectedProduct && (
+            <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
+              <form
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '10px 10px 10px 10px',
+                  width: '500px',
+                }}
+                onSubmit={handleSubmit}
+              >
+                <div key="nome">
+                  <label>Nome:</label>
+                  <input
+                    type="text"
+                    placeholder="Digite o nome do produto"
+                    onChange={(e) => handleInputChange('nome', e.target.value)}
+                  />
+                </div>
+
+                {getFormFields(selectedProduct.caracteristicas)}
+
+                <button type="submit">REGISTRAR PRODUTO</button>
+              </form>
+              {submitStatus && <p>{submitStatus}</p>} {/* Exibe o status do envio */}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
 }
+
+
+
+
+
+

@@ -38,7 +38,18 @@ const styles = {
   },
 };
 
-const wordToRemove = "Lista";
+// Função para converter strings que contêm valores entre colchetes em arrays de strings
+const parseBrackets = (str) => {
+  const bracketPattern = /^\[(.+)\]$/; // Regex para detectar strings com colchetes
+  const match = str.match(bracketPattern);
+
+  if (match) {
+    return match[1].split(",").map((item) => item.trim()); // Divide e remove espaços em branco
+  }
+  return str; // Se não houver colchetes, retorne a string original
+};
+
+const wordToRemove = "Opções";
 
 export default function ManageCategories() {
   const [nome, setNome] = useState("");
@@ -58,7 +69,7 @@ export default function ManageCategories() {
   const adicionarCampo = () => {
     if (campoNome) {
       let tipo = tipoCampo;
-      if (tipoCampo === "Lista" && listaItens.length > 0) {
+      if (tipoCampo === "Opções" && listaItens.length > 0) {
         tipo += ` [${listaItens.join(", ")}]`;
       }
       setCampos([...campos, { campo: campoNome, tipo }]);
@@ -76,14 +87,14 @@ export default function ManageCategories() {
   const handleEdit = (index) => {
     const newCampo = prompt("Novo valor para campo:", campos[index].campo);
     const newTipo = prompt("Novo valor para tipo:", campos[index].tipo);
-    if (newCampo && newTipo) {
+    if (newCampo & newTipo) {
       const newCampos = [...campos];
       newCampos[index] = { campo: newCampo, tipo: newTipo };
       setCampos(newCampos);
     }
   };
 
-  const handleEnviar = () => {
+  const handleEnviar = async () => {
     const caracteristicas = campos.reduce((acc, item) => {
       const cleanTipo = item.tipo
         .replace(new RegExp(`\\b${wordToRemove}\\b`, "gi"), "")
@@ -92,12 +103,35 @@ export default function ManageCategories() {
       return acc;
     }, {});
 
+    const parsedCaracteristicas = {};
+    for (const key in caracteristicas) {
+      parsedCaracteristicas[key] = parseBrackets(caracteristicas[key]);
+    }
+
     const resultado = {
-      nome: nome, // Adiciona o valor do campo "Nome" ao JSON
-      caracteristicas: caracteristicas,
+      nome: nome,
+      caracteristicas: parsedCaracteristicas,
     };
 
-    console.log(JSON.stringify(resultado, null, 2)); // Pretty print do JSON
+    console.log("Enviando para API:", resultado);
+
+    try {
+      const response = await fetch("http://localhost:3000/tipo-produto", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(resultado),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao enviar para a API");
+      }
+
+      console.log("Enviado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao enviar:", error.message);
+    }
   };
 
   return (
@@ -105,7 +139,7 @@ export default function ManageCategories() {
       <form className="categories-create-form">
         <div className="categories-create-container">
           <div>
-            <label>Nome:</label>
+            <label>Categoria:</label>
             <input
               type="text"
               value={nome}
@@ -114,7 +148,7 @@ export default function ManageCategories() {
           </div>
 
           <div>
-            <label>Campo:</label>
+            <label>Característica:</label>
             <input
               type="text"
               value={campoNome}
@@ -127,12 +161,10 @@ export default function ManageCategories() {
               value={tipoCampo}
               onChange={(e) => setTipoCampo(e.target.value)}
             >
-              <option value="">Selecione um tipo</option>
               <option value="Texto">Texto</option>
-              <option value="Número Inteiro">Número Inteiro</option>
-              <option value="Número Decimal">Número Decimal</option>
-              <option value="Lista">Lista</option>
-              <option value="Booleano">Booleano</option>
+              <option value="Moeda (R$)">Moeda (R$)</option>
+              <option value="Medida (m ou cm)">Medida (m ou cm)</option>
+              <option value="Opções">Opções</option>
             </select>
           </div>
           <button type="button" onClick={adicionarCampo}>
@@ -140,9 +172,9 @@ export default function ManageCategories() {
           </button>
         </div>
 
-        {tipoCampo === "Lista" && (
-          <div className={tipoCampo === "Lista" && "categories-list-field"}>
-            <label>Adicionar item à lista:</label>
+        {tipoCampo === "Opções" && (
+          <div className="categories-list-field">
+            <label>Adicionar opções:</label>
             <input
               type="text"
               value={itemLista}
@@ -163,43 +195,38 @@ export default function ManageCategories() {
       <table className="table-create">
         <thead>
           <tr className="table-titles-container">
-            <th>Campo</th>
+            <th>Característica</th>
             <th>Tipo</th>
-            <th>Ação</th>
+            <th>Editar/Excluir</th>
           </tr>
         </thead>
         <tbody>
-          {campos.map((item, index) => {
-            const cleanTipo = item.tipo
-              .replace(new RegExp(`\\b${wordToRemove}\\b`, "gi"), "")
-              .trim();
-
-            return (
-              <tr key={index} style={styles.trHover}>
-                <td>{item.campo}</td>
-                <td>{cleanTipo}</td>
-                <td>
-                  <button
-                    style={styles.actionButton}
-                    onClick={() => handleEdit(index)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    style={styles.actionButton}
-                    onClick={() => handleDelete(index)}
-                  >
-                    Excluir
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+          {campos.map((item, index) => (
+            <tr key={index}>
+              <td>{item.campo}</td>
+              <td>{item.tipo}</td>
+              <td>
+                <button
+                  style={styles.actionButton}
+                  onClick={() => handleEdit(index)}
+                >
+                  Editar
+                </button>
+                <button
+                  style={styles.actionButton}
+                  onClick={() => handleDelete(index)}
+                >
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-    <div className="save-button-container">
-      <button onClick={handleEnviar} className="save-button">Enviar</button>
-    </div>
+      <div className="save-button-container">
+        <button onClick={handleEnviar} className="save-button">Enviar</button>
+      </div>
     </div>
   );
 }
+
