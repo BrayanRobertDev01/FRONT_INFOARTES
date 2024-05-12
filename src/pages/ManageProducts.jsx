@@ -1,62 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/ProductRegister.scss";
 import { FaPencil, FaTrash } from "react-icons/fa6";
 import { IoSend } from "react-icons/io5";
 
 export default function ManageProducts() {
-  const items = [
-    {
-      title: "Folheto",
-      properties: [
-        {
-          fieldName: "Frente e Verso 10x15",
-          fieldValue: 10,
-          fieldPackage: 1000,
-        },
-        {
-          fieldName: "Somente Frente 10x15",
-          fieldValue: 10,
-          fieldPackage: 1000,
-        },
-        {
-          fieldName: "Frente e Verso 06x08",
-          fieldValue: 10,
-          fieldPackage: 1000,
-        },
-        {
-          fieldName: "Somente Frente 06x08",
-          fieldValue: 10,
-          fieldPackage: 1000,
-        },
-      ],
-    },
-    {
-      title: "Camisa",
-      properties: [
-        {
-          fieldName: "Tamanho P",
-          fieldtec: "Algodão",
-          fieldColor: "Preto",
-          fieldValue: 40,
-        },
-        // Outros itens omitidos para brevidade...
-      ],
-      descricoes: "Descrições para Camisas",
-    },
-  ];
-
+  const [items, setItems] = useState([]);
+  const [products, setProducts] = useState([]);
   const [active, setActive] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [categoryActiveId, setCategoryActiveId] = useState(null);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/tipo-produto", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Erro ao buscar os dados");
+        }
+
+        const data = await response.json();
+        setItems(data);
+      } catch (error) {
+        console.error("Erro:", error);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  useEffect(() => {
+    const ItemsCategoryActive = async () => {
+      try {
+        if (categoryActiveId !== null) {
+          const response = await fetch(`http://127.0.0.1:5000/produto/categoria/${categoryActiveId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Erro ao buscar os dados");
+          }
+
+          const data2 = await response.json();
+          setProducts(data2)
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+      }
+    };
+
+    ItemsCategoryActive();
+  }, [categoryActiveId]);
 
   const handleActive = (index) => {
     if (active === index) {
       setActive(null);
+      setCategoryActiveId(null);
     } else {
       setActive(index);
+      setCategoryActiveId(items[index].id)
     }
   };
+
   const openEditModal = (property) => {
     setSelectedItem(property);
     setEditModalOpen(true);
@@ -100,36 +115,28 @@ export default function ManageProducts() {
               className={active === index ? "active" : ""}
               onClick={() => handleActive(index)}
             >
-              {item.title}
+              {item.nome}
             </li>
           ))}
         </ul>
       </div>
       <div className="ItemsPropertiesContainer">
         {active !== null && (
-          <div>
-            <ul className="ItemsPropertiesList">
-              {items[active].properties.map((property, index) => (
-                <div className="divider" key={index}>
-                  <li className="ItemsPropertie">
-                    {property.fieldName}:{" "}
-                    {formatoMoedaBrasileira(property.fieldValue)}
+          <div style={{color: "white"}}>
+          {products.map((produto) => (
+            <div key={produto.id} className="products">
+              <h3>{produto.nome}</h3>
+              <ul>
+                {Object.entries(produto.informacoes).map(([chave, valor]) => (
+                  <li key={chave}>
+                    <strong>{chave}:</strong> {valor}
                   </li>
-                  <div className="PropertiesIconsContainer">
-                    <FaTrash
-                      className="trash"
-                      onClick={() => openDeleteModal(property)}
-                    />
-                    <FaPencil
-                      className="pencil"
-                      onClick={() => openEditModal(property)}
-                    />
-                  </div>
-                </div>
-              ))}
-            </ul>
-          </div>
-        )}
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        )} 
       </div>
 
       {/* Modal de Edição */}
@@ -192,3 +199,5 @@ export default function ManageProducts() {
     </div>
   );
 }
+
+

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import "../styles/RegisterProducts.scss";
 
 export default function RegisterProducts() {
   const [tipo_produtos, setTipoProdutos] = useState([]);
@@ -7,11 +8,12 @@ export default function RegisterProducts() {
   const [productName, setProductName] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitStatus, setSubmitStatus] = useState(null);
+  
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:3000/tipo-produto');
+        const response = await fetch('http://127.0.0.1:5000/tipo-produto');
         if (response.ok) {
           const data = await response.json();
           setTipoProdutos(data);
@@ -31,7 +33,7 @@ export default function RegisterProducts() {
     setSelectedProductId(id);
     setFormData({});
     setProductName("");
-    setSubmitStatus(null); // Limpa a mensagem de status ao selecionar um novo produto
+    setSubmitStatus(null);
   };
 
   const handleInputChange = (key, value) => {
@@ -51,7 +53,8 @@ export default function RegisterProducts() {
 
       if (Array.isArray(value)) {
         inputElement = (
-          <select onChange={(e) => handleInputChange(key, e.target.value)}>
+          <select onChange={(e) => handleInputChange(key, e.target.value)} required>
+            <option value="">Selecione uma opção</option>
             {value.map((v) => (
               <option key={v} value={v}>
                 {v}
@@ -66,7 +69,9 @@ export default function RegisterProducts() {
               <input
                 type="number"
                 step="0.01"
+                min="1"
                 onChange={(e) => handleInputChange(key, e.target.value)}
+                required
               />
             );
             break;
@@ -75,7 +80,9 @@ export default function RegisterProducts() {
               <input
                 type="number"
                 step="0.01"
+                min="1"
                 onChange={(e) => handleInputChange(key, e.target.value)}
+                required
               />
             );
             break;
@@ -85,6 +92,7 @@ export default function RegisterProducts() {
                 type="number"
                 step="1"
                 onChange={(e) => handleInputChange(key, e.target.value)}
+                required
               />
             );
             break;
@@ -93,6 +101,7 @@ export default function RegisterProducts() {
               <input
                 type="checkbox"
                 onChange={(e) => handleInputChange(key, e.target.checked)}
+                required
               />
             );
             break;
@@ -101,6 +110,7 @@ export default function RegisterProducts() {
               <input
                 type="text"
                 onChange={(e) => handleInputChange(key, e.target.value)}
+                required
               />
             );
             break;
@@ -128,7 +138,7 @@ export default function RegisterProducts() {
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:3000/produto', {
+      const response = await fetch('http://127.0.0.1:5000/produto', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,34 +160,42 @@ export default function RegisterProducts() {
     (produto) => produto.id === selectedProductId
   );
 
+  const [active, setActive] = useState(null);
+  const handleActive = (index) => {
+    if (active === index) {
+      setActive(null);
+    } else {
+      setActive(index);
+    }
+  };
+
   return (
-    <div>
+    <div className='ProductRegisterBody'>
       {loading ? (
         <p>Carregando...</p>
       ) : (
-        <>
-          <ul>
-            {tipo_produtos.map((produto) => (
+        <><div className='list_categories'>
+          <ul className='ItemsList'>
+            {tipo_produtos.map((produto, index) => (
               <li
                 key={produto.id}
-                onClick={() => handleItemClick(produto.id)}
+                onClick={() => {
+                  handleItemClick(produto.id);
+                  handleActive(index);
+              }}
               >
                 {produto.nome}
               </li>
             ))}
           </ul>
+          </div>
           {selectedProductId && selectedProduct && (
-            <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
+            <div className='FormRegisterProduct'>
               <form
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  padding: '10px 10px 10px 10px',
-                  width: '500px',
-                }}
                 onSubmit={handleSubmit}
               >
                 <div key="nome">
+                  <h1>REGISTRAR PRODUTO</h1>
                   <label>Nome:</label>
                   <input
                     type="text"
