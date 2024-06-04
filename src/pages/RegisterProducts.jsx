@@ -8,7 +8,7 @@ export default function RegisterProducts() {
   const [productName, setProductName] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitStatus, setSubmitStatus] = useState(null);
-  
+  const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -29,11 +29,20 @@ export default function RegisterProducts() {
     fetchProducts();
   }, []);
 
-  const handleItemClick = (id) => {
-    setSelectedProductId(id);
-    setFormData({});
-    setProductName("");
-    setSubmitStatus(null);
+  const handleItemClick = (id, index) => {
+    if (selectedProductId === id) {
+      setSelectedProductId(null);
+      setActiveIndex(null);
+      setFormData({});
+      setProductName("");
+      setSubmitStatus(null);
+    } else {
+      setSelectedProductId(id);
+      setActiveIndex(index);
+      setFormData({});
+      setProductName("");
+      setSubmitStatus(null);
+    }
   };
 
   const handleInputChange = (key, value) => {
@@ -160,42 +169,30 @@ export default function RegisterProducts() {
     (produto) => produto.id === selectedProductId
   );
 
-  const [active, setActive] = useState(null);
-  const handleActive = (index) => {
-    if (active === index) {
-      setActive(null);
-    } else {
-      setActive(index);
-    }
-  };
-
   return (
     <div className='ProductRegisterBody'>
       {loading ? (
         <p>Carregando...</p>
       ) : (
-        <><div className='list_categories'>
-          <ul className='ItemsList'>
-            {tipo_produtos.map((produto, index) => (
-              <li
-                key={produto.id}
-                onClick={() => {
-                  handleItemClick(produto.id);
-                  handleActive(index);
-              }}
-              >
-                {produto.nome}
-              </li>
-            ))}
-          </ul>
+        <>
+          <div className='list_categories'>
+            <ul className='ItemsList'>
+              {tipo_produtos.map((produto, index) => (
+                <li
+                  key={produto.id}
+                  className={activeIndex === index ? 'active' : ''}
+                  onClick={() => handleItemClick(produto.id, index)}
+                >
+                  {produto.nome}
+                </li>
+              ))}
+            </ul>
           </div>
           {selectedProductId && selectedProduct && (
             <div className='FormRegisterProduct'>
-              <form
-                onSubmit={handleSubmit}
-              >
+              <h1>REGISTRAR PRODUTO</h1>
+              <form onSubmit={handleSubmit}>
                 <div key="nome">
-                  <h1>REGISTRAR PRODUTO</h1>
                   <label>Nome:</label>
                   <input
                     type="text"
@@ -216,9 +213,3 @@ export default function RegisterProducts() {
     </div>
   );
 }
-
-
-
-
-
-
