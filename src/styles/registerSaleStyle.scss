@@ -1,0 +1,44 @@
+@import "variables";
+@import "functions";
+
+.mainSection {
+  background-color: red;
+  display: flex;
+  justify-content: center;
+}
+
+.cardSectionMain {
+  display: flex;
+  background-color: white;
+  max-width: 600px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cardSection {
+  padding: 10px;
+  width: 250px;
+}
+
+.inputLabelStyle {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  label {
+    font-size: 20;
+  }
+}
+
+.inputStyle {
+  font-size: 18px;
+  border-radius: 50px;
+  border: none;
+  background-color: $cinzaPadrao;
+  padding: 5px;
+  padding-left: 15px;
+  
+  &:focus {
+    outline: 2px solid $azulSecundario;
+  }
+}

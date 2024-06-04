@@ -5,6 +5,7 @@ import "./styles/App.scss";
 import ManageProducts from "./pages/ManageProducts";
 import RegisterProducts from "./pages/RegisterProducts";
 import ManageCategories from "./pages/ManageCategories";
+import RegisterSale from "./pages/RegisterSale";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/manage_products" element={<ManageProducts />} />
             <Route path="/register-product" element={<RegisterProducts />} />
             <Route path="/manage-types" element={<ManageCategories />} />
+            <Route path="/register-sale" element={<RegisterSale />} />
           </Routes>
         </div>
       </div>
