@@ -11,17 +11,25 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import ModalEstampa from '../components/ModalEstampa';
 
 const RegisterSale = () => {
   const [products, setProducts] = useState([]);
   const [closeEye, setCloseEye] = useState(false)
   const [productSelected, setProductSelect] = useState([])
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const [signOpen, setSignOpen] = useState(false)
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  const handleChangeSelect = (e) => {
+    const productId = e.target.value;
+    const itemFinded = products.find(e => e.id == productId);
+    setProductSelect(itemFinded)
+  }
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -42,73 +50,80 @@ const RegisterSale = () => {
   }, []);
 
   return (
-    <div className='mainSection'>
-      <div className='cardSectionMain'>
-        <section className='sectionItemsInputs'>
-          <section className='cardSection'>
-            <div className='inputLabelStyle'>
-              <label style={{ fontSize: 20 }}>Cliente</label>
-              <input className='inputStyle' type='text' placeholder='Digite o nome do cliente' />
-            </div>
-          </section>
-
-          <section className='cardSection'>
-            <div className='inputLabelStyle'>
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <label style={{ fontSize: 20 }}>Produtos</label>
-                {!closeEye ? <button className='iconStyle' onClick={() => setCloseEye(true)}><FaEye size={20} /></button> : <button className='iconStyle' onClick={() => setCloseEye(false)}><RiEyeCloseFill size={20} /></button>}
-              </div>
-              <select style={{ fontSize: 18 }}>
-                <option selected>Selecione o produto</option>
-                {products.map((product) => (
-                  <option>{product.nome}</option>
-                ))}
-              </select>
-
-              {/* <input className='inputStyle' type='text' placeholder='Digite o valor do sinal' /> */}
-            </div>
-          </section>
-          <section className='cardSection'>
-            <div className='inputLabelStyle'>
-              <label style={{ fontSize: 20 }}>Telefone</label>
-              <input className='inputStyle' type='text' placeholder='Digite o nome do cliente' />
-            </div>
-          </section>
-          <section className='cardSection'>
-            <div className='inputLabelStyle'>
-              <label style={{ fontSize: 20 }}>Data da Compra</label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker
-                    onChange={handleDateChange}
-                    format='DD/MM/YYYY'
-                    views={['day', 'month', 'year']}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </div>
-          </section>
-          <section className='cardSection'>
-            <div className='toggleStyle'>
-              <label style={{ fontSize: 20 }}>Sinal</label>
-              <div className='toggleButton'>
-                <span className='circleToggle'></span>
-                <Switch onClick={() => setSignOpen(!signOpen)} defaultChecked={false} required />
-              </div>
-            </div>
-          </section>
-          {signOpen && (
+    <>
+      {productSelected.length !== 0 && (
+        <ModalEstampa />
+      )}
+      <div className='mainSection'>
+        <div className='cardSectionMain'>
+          <section className='sectionItemsInputs'>
             <section className='cardSection'>
               <div className='inputLabelStyle'>
-                <label style={{ fontSize: 20 }}>Valor do Sinal</label>
+                <label style={{ fontSize: 20 }}>Cliente</label>
                 <input className='inputStyle' type='text' placeholder='Digite o nome do cliente' />
               </div>
             </section>
-          )}
-        </section>
-        <button>Registrar compra</button>
+
+            <section className='cardSection'>
+              <div className='inputLabelStyle'>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <label style={{ fontSize: 20 }}>Produtos</label>
+                  {!closeEye ? <button className='iconStyle' onClick={() => setCloseEye(true)}><FaEye size={20} /></button> : <button className='iconStyle' onClick={() => setCloseEye(false)}><RiEyeCloseFill size={20} /></button>}
+                </div>
+                <select onChange={(e) => handleChangeSelect(e)} className='selectItems' style={{ fontSize: 18 }}>
+                  <option selected>Selecione o produto</option>
+                  {products.map((product) => (
+                    <option key={product.id} value={product.id}>{product.nome}</option>
+                  ))}
+                </select>
+
+                {/* <input className='inputStyle' type='text' placeholder='Digite o valor do sinal' /> */}
+              </div>
+            </section>
+            <section className='cardSection'>
+              <div className='inputLabelStyle'>
+                <label style={{ fontSize: 20 }}>Telefone</label>
+                <input className='inputStyle' type='text' placeholder='Digite o nome do cliente' />
+              </div>
+            </section>
+            <section className='cardSection'>
+              <div className='inputLabelStyle'>
+                <label style={{ fontSize: 20 }}>Data da Compra</label>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker
+                      onChange={handleDateChange}
+                      format='DD/MM/YYYY'
+                      views={['day', 'month', 'year']}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </div>
+            </section>
+            <section className='cardSection'>
+              <div className='toggleStyle'>
+                <label style={{ fontSize: 20 }}>Sinal</label>
+                <div className='toggleButton'>
+                  <span className='circleToggle'></span>
+                  <Switch onClick={() => setSignOpen(!signOpen)} defaultChecked={false} required />
+                </div>
+              </div>
+            </section>
+            {signOpen && (
+              <section className='cardSection'>
+                <div className='inputLabelStyle'>
+                  <label style={{ fontSize: 20 }}>Valor do Sinal</label>
+                  <input className='inputStyle' type='text' placeholder='Digite o nome do cliente' />
+                </div>
+              </section>
+            )}
+          </section>
+          <div className='divButtonBuy'>
+            <button className='registerBuyButton'>Registrar compra</button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -2,7 +2,6 @@
 @import "functions";
 
 .mainSection {
-  background-color: red;
   display: flex;
   justify-content: center;
 }
@@ -10,6 +9,9 @@
 .cardSectionMain {
   display: flex;
   background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   min-width: 600px;
   max-width: 600px;
   flex-direction: column;
@@ -21,6 +23,28 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.divButtonBuy {
+  display: flex;
+  justify-content: center;
+}
+
+.registerBuyButton {
+  min-width: 400px;
+  max-width: 400px;
+  height: 50px;
+  margin: 10px;
+  border-radius: 50px;
+  border: none;
+  background: $azulEscuro;
+  color: white;
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.selectItems {
+  padding: 10px;
 }
 
 .cardSection {
