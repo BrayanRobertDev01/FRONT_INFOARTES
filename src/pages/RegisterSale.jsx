@@ -52,7 +52,7 @@ const RegisterSale = () => {
   return (
     <>
       {productSelected.length !== 0 && (
-        <ModalEstampa />
+        <ModalEstampa product={productSelected} setCloseModal={setProductSelect} />
       )}
       <div className='mainSection'>
         <div className='cardSectionMain'>
@@ -71,7 +71,7 @@ const RegisterSale = () => {
                   {!closeEye ? <button className='iconStyle' onClick={() => setCloseEye(true)}><FaEye size={20} /></button> : <button className='iconStyle' onClick={() => setCloseEye(false)}><RiEyeCloseFill size={20} /></button>}
                 </div>
                 <select onChange={(e) => handleChangeSelect(e)} className='selectItems' style={{ fontSize: 18 }}>
-                  <option selected>Selecione o produto</option>
+                  <option selected value='Selecione o produto' disabled>Selecione o produto</option>
                   {products.map((product) => (
                     <option key={product.id} value={product.id}>{product.nome}</option>
                   ))}
